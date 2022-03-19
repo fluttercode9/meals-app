@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/models/meal.dart';
 import '../dummy_data.dart';
 import '../widgets/meal_item.dart';
 
@@ -52,16 +51,29 @@ Widget buildScrollableList(BuildContext context, List<String> listInMeal) {
 
 class MealDetailsScreen extends StatelessWidget {
   static const route = '/meal-details';
-  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    final mealId = ModalRoute.of(context).settings.arguments;
+    final passedArgs =
+        ModalRoute.of(context).settings.arguments as passArguments;
+    final mealId = passedArgs.id;
+    final affordability = passedArgs.affordabilityText;
+    final complexity = passedArgs.complexityText;
+
     final selectedMeal =
         DUMMY_MEALS.firstWhere((element) => element.id == mealId);
+    final isVegan = selectedMeal.isVegan;
     return Scaffold(
       appBar: AppBar(
         title: Text(selectedMeal.title),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: (){
+              Navigator.of(context).pop(mealId);
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -74,14 +86,28 @@ class MealDetailsScreen extends StatelessWidget {
           buildScrollableList(context, selectedMeal.ingredients),
           buildSectionTitle(context, 'Steps:'),
           buildScrollableList(context, selectedMeal.steps),
-          Row(
-            children: [
-              Row(children: [
-                Icon(Icons.access_alarm),
-                Text('${selectedMeal.duration}')
-              ]),
-            ],
-          )
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Row(
+              children: [
+                Row(children: [
+                  Icon(Icons.access_alarm),
+                  Text('${selectedMeal.duration}')
+                ]),
+                Row(
+                  children: [
+                    Icon(Icons.accessibility_new_sharp),
+                    Text('$affordability, $complexity,'),
+                    isVegan
+                        ? Text(
+                            '  vegan',
+                            style: TextStyle(color: Colors.green[300]),
+                          )
+                        : Container()
+                  ],
+                )
+              ],
+            ),
+          ]),
         ],
       ),
     );
