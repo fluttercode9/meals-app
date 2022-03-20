@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/dummy_data.dart';
+import 'package:flutter_complete_guide/models/meal.dart';
 import 'package:flutter_complete_guide/screens/category_meals_screen.dart';
 import 'package:flutter_complete_guide/screens/favorites_screen.dart';
 import 'package:flutter_complete_guide/screens/filters_screen.dart';
@@ -8,7 +10,44 @@ import 'screens/tabs_screen.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Map<String, bool> _filters = {
+    "gluten": true,
+    'lactose': false,
+    'vegan': false,
+    'vegetarian': true
+  };
+  List<Meal> availableMeals;
+  void setFilters(Map<String, bool> newFilters) {
+    setState(() {
+      _filters = newFilters;
+      availableMeals = DUMMY_MEALS.where((meal) {
+        if (!meal.isGlutenFree && _filters['gluten']) {
+          return false;
+        }
+        if (!meal.isLactoseFree && _filters['lactose']) {
+          return false;
+        }
+        if (!meal.isVegan && _filters['vegan']) {
+          return false;
+        }
+        if (!meal.isVegetarian && _filters['vegetarian']) {
+          return false;
+        }
+        if (!meal.isGlutenFree && _filters['gluten']) {
+          return false;
+        }
+        return true;
+      }).toList();
+      print(availableMeals[2].id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,10 +72,10 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         "/": (ctx) => TabScreen(),
-        CategoryMealsScreen.route: (ctx) => CategoryMealsScreen(),
+        CategoryMealsScreen.route: (ctx) => CategoryMealsScreen(availableMeals),
         MealDetailsScreen.route: (ctx) => MealDetailsScreen(),
         FavoritesScreen.route: (ctx) => FavoritesScreen(),
-        FiltersScreen.route: (ctx) => FiltersScreen(),
+        FiltersScreen.route: (ctx) => FiltersScreen(_filters, setFilters),
       },
     );
   }
