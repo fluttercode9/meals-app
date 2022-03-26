@@ -16,10 +16,10 @@ class Meal {
   final Complexity complexity;
   final Affordability affordability;
   final bool isGlutenFree;
-  final bool isLactoseFree;
+  final bool isLactoseFresdsdsdsde;
   final bool isVegan;
   final bool isVegetarian;
-
+//ssss
 
   const Meal(
       {@required this.id,
