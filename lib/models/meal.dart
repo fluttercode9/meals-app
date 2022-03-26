@@ -16,7 +16,7 @@ class Meal {
   final Complexity complexity;
   final Affordability affordability;
   final bool isGlutenFree;
-  final bool isLactoseFresdsdsdsde;
+  final bool isLactose;
   final bool isVegan;
   final bool isVegetarian;
 //ssss
